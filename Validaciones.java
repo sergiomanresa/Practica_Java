@@ -18,14 +18,12 @@ class Validaciones {
         String habitacion_1="";
         String habitacion_2="";
         ArrayList<Habitacion> Habitacion = new ArrayList<>();
-
+        ArrayList<Habitacion> habitacionesEncontradas = new ArrayList<>();
         coma=opcion_habitaciones2.indexOf(",");
         habitacion_1=opcion_habitaciones2.substring(0,coma);
         habitacion_2=opcion_habitaciones2.substring(coma+1,opcion_habitaciones2.length());
-        for (Habitacion habitacion:Habitacion.get()) {
-            
-        }
-        return Habitacion;
+
+        return habitacionesEncontradas;
     }
 
     /**

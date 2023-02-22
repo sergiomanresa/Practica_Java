@@ -14,7 +14,6 @@ public class Main {
         Scanner scanner=new Scanner(System.in);
         HashMap<Integer,String> habitacion_elegida = new HashMap<>();
         ArrayList<Habitacion> habitacion_posible= new ArrayList<>();
-        ArrayList<String> room = new ArrayList<>();
         ArrayList<Clientes> cliente =new ArrayList<>();
         GestorClientes gestor=new GestorClientes(cliente);
         gestor.generarClientesBase();
@@ -23,6 +22,7 @@ public class Main {
 
 
         //variables
+        int dinero_habitaciones=0;
         String opcion_habitaciones2="";
         String opcion_habitaciones="";
         boolean habitacion_no_repetida=true;
@@ -126,6 +126,7 @@ public class Main {
                                    System.out.printf("\n2. Atención al cliente");
                                    System.out.printf("\n3. Pago online con factura");
                                    System.out.printf("\n4. Salir\n");
+
                                    System.out.println("\n Opción en numero: ");
                                    opcion = scanner.nextLine();
                                    if (opcion.length()==1){
@@ -133,7 +134,8 @@ public class Main {
                                    } else{
                                        System.out.println("opción invalida");
                                    }
-                               }while (!opcion.equals("1")||!opcion.equals("2")||!opcion.equals("3")||!opcion.equals("4"));
+                               }while (!opcion.equals("1")&&!opcion.equals("2")&&!opcion.equals("3")&&!opcion.equals("4"));
+
                                 switch (caso){
                                     case '1':
                                         System.out.println("*******RESERVAR HABITACIÓN********");
@@ -150,18 +152,19 @@ public class Main {
                                             fecha_entrada= scanner.nextLine();
                                             System.out.println("¿Cuál es la fecha de salida?");
                                             fecha_salida= scanner.nextLine();
-                                        }while (Validaciones.comprobar_fecha_entrada_salida(fecha_entrada,fecha_salida));
+                                        }while (!Validaciones.comprobar_fecha_entrada_salida(fecha_entrada,fecha_salida));
 
                                         people=persona_final;
                                         Habitacion habitacion = new Habitacion();
                                         habitacion.generar_habitaciones_base();
+                                        // Se itera sobre la lista de habitaciones y se busca aquellas que sean adecuadas para el número de personas y no estén ocupadas.
                                         for (Habitacion habitacion_ : habitacion.getListado_de_habitaciones()){
                                             if (habitacion_.getMax_personas()== people && !habitacion_.isOcupada()){
                                                 System.out.println("Tenemos disponibles para esa fecha: ");
                                                 System.out.println("Opción: "+ (++incremento));
                                                 System.out.println("Habitación "+ habitacion_.getNombre()+" para "+ habitacion_.getMax_personas()+" personas ");
                                                 opcion_habitaciones+=habitacion_.getId();
-                                                precio+= habitacion_.getPrecio();
+                                                dinero_habitaciones+= habitacion_.getPrecio();
                                                 habitacion_reserva.add(habitacion_);
                                                 habitacion_posible.add(habitacion_);
                                                 habitacion_elegida.put(incremento,new String(opcion_habitaciones));
@@ -169,6 +172,7 @@ public class Main {
                                             }
                                         }
                                         people=persona_final;
+                                        //Se itera de nuevo sobre la lista de habitaciones, pero esta vez se buscan combinaciones de habitaciones que en conjunto puedan alojar al número de personas requerido.
                                                 for (Habitacion habitacion_ : habitacion.getListado_de_habitaciones()) {
                                                     habitacion_repetidas.add(habitacion_);
                                                     if (persona_final != habitacion_.getMax_personas()){
@@ -188,6 +192,7 @@ public class Main {
                                                                         System.out.println("Habitación "+ habitacion_comp.getNombre()+" para "+ habitacion_comp.getMax_personas()+" personas ");
                                                                         System.out.println(habitacion_.getPrecio()+habitacion_comp.getPrecio()+" euros");
                                                                         opcion_habitaciones2+=habitacion_.getId()+","+habitacion_comp.getId();
+                                                                        dinero_habitaciones+=habitacion_.getPrecio()+habitacion_comp.getPrecio();
                                                                         habitacion_posible.add(habitacion_);
                                                                         habitacion_posible.add(habitacion_comp);
                                                                         habitacion_elegida.put(incremento,new String(opcion_habitaciones2));
@@ -275,23 +280,24 @@ public class Main {
                                                     }while (!Validaciones.solo_numero(tarjeta) || !Validaciones.validación_tarjeta(tarjeta) || Validaciones.noTieneNada(tarjeta));
                                                     System.out.println("*******_Factura_********");
                                                     System.out.println("Datos del cliente: ");
-                                                    for (Clientes clientes : gestor.getListado_de_clientes()){
-                                                        if (clientes.getNombre().equals("Manuel"))
-                                                            System.out.println(clientes.infoBasica());
-                                                    }
+                                                    System.out.println("nombre del cliente: "+nombre);
                                                     String fecha = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
                                                     System.out.println("Fecha factura: "+fecha );
                                                     System.out.println("Código Factura: "+ codigo_factura);
-                                                    System.out.println("Descripcion o Concepto"+);
-                                                    Validaciones.detectar_id(opcion_habitaciones2);
-
-                                                    System.out.println("Precio total: "+precio);
+                                                    System.out.println("Precio total: "+ dinero_habitaciones);
 
                                                 }
                                                 else if (opcion.equals("2")) {
                                                     System.out.println("******* Pago mediante Bizum ********");
                                                     System.out.println("Numero de teléfono:");
                                                     System.out.println("694463985");
+                                                    System.out.println("*******_Factura_********");
+                                                    System.out.println("Datos del cliente: ");
+                                                    System.out.println("nombre del cliente: "+nombre);
+                                                    String fecha = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+                                                    System.out.println("Fecha factura: "+fecha );
+                                                    System.out.println("Código Factura: "+ codigo_factura);
+                                                    System.out.println("Precio total: "+precio);
                                                 }
                                                 else if (opcion.equals("0")){
                                                     System.out.println("Saliendo...");
