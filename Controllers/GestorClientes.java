@@ -9,6 +9,7 @@ package Practica_evaluacion.Controllers;
 import Practica_evaluacion.Utils.Validaciones;
 import Practica_evaluacion.excepcion.EmailInvalidoException;
 import Practica_evaluacion.excepcion.NombreNoValidoException;
+import Practica_evaluacion.excepcion.NumeroInvalidoException;
 import Practica_evaluacion.excepcion.StringVacioException;
 import Practica_evaluacion.models.Cliente;
 
@@ -190,18 +191,37 @@ public class GestorClientes {
         do {
             System.out.println("Teléfono:");
             telefono= scanner.nextLine();
-        }while (!Validaciones.numerocorrecto(telefono));
+            try{
+                Validaciones.numerocorrecto(telefono);
+            } catch (NumeroInvalidoException e){
+                System.out.printf(e.getMessage());
+                continue;
+            }
+            break;
+        }while (true);
         do {
             System.out.println("Fecha de nacimiento (dd/mm/aaaa) o (dd-mm-aaaa):");
             fechanacimiento= scanner.nextLine();
-        }while (!Validaciones.fechaCorrecta(fechanacimiento));
+            try {
+                Validaciones.numerocorrecto(telefono);
+            }catch (NumeroInvalidoException e){
+                System.out.printf(e.getMessage());
+                continue;
+            }
+            break;
+
+        }while (true);
         do {
             System.out.println("Frase de control (4 palabras separadas por 1 espacio cada palabra):");
             control= scanner.nextLine();
             control=control.toUpperCase();
-            //aquí nos aseguramos de que si todos los parámetros son correctos imprima el código de seguridad
-            control = Validaciones.primera_letra(control);
-        }while (control.equals("ERROR"));
+            try {
+                Validaciones.primera_letra(control);
+            }catch (StringVacioException e){
+
+                System.out.printf(e.getMessage());
+
+            }
             System.out.print("tu código es:");
             System.out.println(control);
             Cliente cliente=new Cliente(nombre,apellidos,email,telefono,dni);

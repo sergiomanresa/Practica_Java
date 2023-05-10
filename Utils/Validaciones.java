@@ -1,9 +1,6 @@
 package Practica_evaluacion.Utils;
 
-import Practica_evaluacion.excepcion.EmailInvalidoException;
-import Practica_evaluacion.excepcion.NombreNoValidoException;
-import Practica_evaluacion.excepcion.NumeroInvalidoException;
-import Practica_evaluacion.excepcion.StringVacioException;
+import Practica_evaluacion.excepcion.*;
 
 /**
  * Clase para las validaciones
@@ -151,12 +148,12 @@ public class Validaciones {
     public static boolean noTieneNada(String palabra) {return palabra.length() == 0;}
 
     /**
-     * esta función sirve para obtener el código de control
+     * Esta función sirve para obtener el código de control
      * @param control
      * @return el codigo
      */
 
-    public static String primera_letra(String control){
+    public static String primera_letra(String control) throws StringVacioException {
         //máximo tres espacios
         int contadorEspacios = 0;
         String mayusculas = "";
@@ -172,8 +169,7 @@ public class Validaciones {
         }
         //aquí ponemos el máximo de espacios
         if(contadorEspacios!=3){
-            System.out.println("es un espacio por palabra máximo=3");
-            return "ERROR";
+            throw new StringVacioException("es un espacio por palabra máximo= 3");
         }
         mayusculas+=control.charAt(0);
         for(int i = 0; i < control.length(); i++){
@@ -198,41 +194,36 @@ public class Validaciones {
      * @return la fecha correcta
      */
 
-    public static boolean fechaCorrecta(String date){
+    public static void fechaCorrecta(String date) throws FormatoFechaNoValidoException {
         int mes, anyo, dias;
         boolean bisiesto = false;
         date = date.trim();
 //aquí ponemos la longitud maxima de la fecha
         if(date.length()!=10){
-            System.out.println("Longitud no permitida");
-            return false;
+            throw new FormatoFechaNoValidoException("Longitud no permitida");
         }
 //aquí ponemos los símbolos aceptados para la fecha
         if((date.charAt(2)!='/' || date.charAt(5)!='/') && (date.charAt(2)!='-' || date.charAt(5)!='-')){
-            System.out.println("formato no valido");
-            return false;
+            throw new FormatoFechaNoValidoException("formato no valido");
         }
 //aquí se asegura de que no hayan cosas que no sean números
         for(int i = 0; i < 2; i++){
             if(date.charAt(i) < '0' || date.charAt(i) > '9' ){
-                System.out.println("solo se permiten números");
-                return false;
+                throw new FormatoFechaNoValidoException("solo se permiten números");
             }
         }
 //aquí se asegura de que no hayan cosas que no sean números en el dia
         dias = Integer.parseInt(date.substring(0, 2));
         for(int i = 3; i < 5; i++){
             if(date.charAt(i) < '0' || date.charAt(i) > '9' ){
-                System.out.println("No hay números permitidos en el dia");
-                return false;
+                throw new FormatoFechaNoValidoException("No hay números permitidos en el dia");
             }
         }
 //aquí se asegura de que no hayan cosas que no sean números en el mes
         mes = Integer.parseInt(date.substring(3, 5));
         for(int i = 6; i < 10; i++){
             if(date.charAt(i) < '0' || date.charAt(i) > '9' ){
-                System.out.println("No hay números permitidos en el mes");
-                return false;
+                throw new FormatoFechaNoValidoException("No hay números permitidos en el mes");
             }
         }
 //aquí nos aseguramos que el año sea bisiesto o no y que en los respectivos meses tengan 31 dias como máximo
@@ -241,50 +232,45 @@ public class Validaciones {
             bisiesto = true;
         if(mes==1 || mes==3 || mes==5 || mes==7 || mes==8 || mes==10 || mes==12){
             if(dias > 31 || dias <= 0){
-                System.out.println("Error con los dias");
-                return false;
+                throw new FormatoFechaNoValidoException("Error con los dias");
             }
         }
-//aquí se asegura de que en los meses de abajo los dias máximo son 30
+//aquí se asegura de que en los meses de abajo los días máximo son 30
         else if(mes==4||mes==6||mes==9||mes==11){
             if(dias>30 || dias <= 0){
-                System.out.println("Error con los dias");
-                return false;
+                throw new FormatoFechaNoValidoException("Error con los dias");
             }
         }
-//y ahora se encarga de poner en febrero como máximo 28 dias excepto cuando sea bisiesto
+//y ahora se encarga de poner en febrero como máximo 28 días excepto cuando sea bisiesto
         else if(mes==2){
             if(bisiesto){
                 if(dias>29 || dias <= 0){
-                    System.out.println("Error en los dias ");
-                    return false;
+                    throw new FormatoFechaNoValidoException("Error con los dias");
                 }
             }
 
             else{
                 if(dias>28 || dias <= 0){
-                    System.out.println("Error con los dias");
-                    return false;
+                    throw new FormatoFechaNoValidoException("Error con los dias");
                 }
             }
         }
 //aquí se pone el rango aceptado de los años
         if(anyo<1910 ||anyo>2023){
-            System.out.println("No se acepta ese año");
-            return false;
+            throw new FormatoFechaNoValidoException("No se acepta ese año");
         }
 //aquí me aseguro de que no seas menor
         if(2023-anyo < 18){
-            System.out.println("Eres menor de edad");
-            return false;
+            throw new FormatoFechaNoValidoException("Eres menor de edad");
         }
 // y aquí nos aseguramos de los rangos de los meses
         if(mes < 0 || mes > 12){
-            System.out.println("error en los meses");
-            return false;
+            throw new FormatoFechaNoValidoException("error en los meses");
         }
 
-        return dias>0 && anyo>0 && mes>0;
+        if (!(dias >0) && !(anyo >0) && !(mes >0)){
+            throw new FormatoFechaNoValidoException("error de formato");
+        }
     }
 
     /**
