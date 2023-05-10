@@ -127,6 +127,10 @@ public class Habitacion {
         listado_de_habitaciones.add (new Habitacion(5,"a5","vistas a carmona",2,5,true,100,false));
     }
 
+    public String formatear_objeto(){
+        return id + ";"+nombre+";"+descripcion+";"+num_camas+";"+max_personas+";"+banera+";"+precio+";";
+    }
+
 
 
 }

@@ -1,5 +1,10 @@
 package Practica_evaluacion.Utils;
 
+import Practica_evaluacion.excepcion.EmailInvalidoException;
+import Practica_evaluacion.excepcion.NombreNoValidoException;
+import Practica_evaluacion.excepcion.NumeroInvalidoException;
+import Practica_evaluacion.excepcion.StringVacioException;
+
 /**
  * Clase para las validaciones
  *
@@ -8,6 +13,7 @@ package Practica_evaluacion.Utils;
  * @since 11/01/2023
  */
 public class Validaciones {
+
 
     /**
      * Comprueba que el dni es válido usando las siguientes validaciones:
@@ -427,19 +433,19 @@ public class Validaciones {
     }
 
     /**
-     * esta función se encarga de comprobar si el nombre y el apellido sean correctos
+     * Esta función se encarga de comprobar si el nombre y el apellido sean correctos
      * @param frase
      * @param apellido
      * @return nombre correcto
      */
-    public static boolean nombrecorrecto(String frase, boolean apellido){
+    public static void nombrecorrecto(String frase, boolean apellido) throws StringVacioException, NombreNoValidoException {
 
         frase = frase.trim();
         frase = frase.toUpperCase();
         int contadorEspacios = 0;
         if(frase.length()==0){
-            System.out.println("No se puede dejar vacío");
-            return false;
+            throw new StringVacioException("No se puede dejar vacío");
+
         }
         for(int i = 0; i < frase.length(); i++){
             if(frase.charAt(i) < 'Á' || frase.charAt(i) > 'Ú'){
@@ -449,18 +455,16 @@ public class Validaciones {
                             contadorEspacios+=1;
                         }
                         else{
-                            if(apellido)
-                                System.out.println("Error en el apellido ");
-                            else
-                                System.out.println("Error en el nombre");
-                            return false;
+                            throw new NombreNoValidoException(apellido ? "Caracter invalido en apellidos" : "Caracter invalido en nombre");
                         }
                     }
                 }
             }
         }
         //Aunque se acepten espacios, no pueden ser solo espacios el string
-        return contadorEspacios!=frase.length();
+        if (contadorEspacios!=frase.length()){
+            throw new StringVacioException("No se permites solo espacios");
+        }
     }
 
     /**
@@ -468,11 +472,11 @@ public class Validaciones {
      * @param email
      * @return email correcto
      */
-    public static boolean emailcorrecto(String email){
+    public static void emailcorrecto(String email) throws StringVacioException, EmailInvalidoException {
         email = email.trim();
         for(int i = 0; i < email.length(); i++){
             if(email.charAt(i)==' ')
-                return false;
+                throw new StringVacioException("No se permite el email vació");
         }
         int posPunto;
         //La arroba no puede estar al final del string u ocupar menos de 3 espacios (Recordemos que hay que comprobar las extensiones)
@@ -486,32 +490,28 @@ public class Validaciones {
         }
 //aquí nos aseguramos de que no pongas dos @ seguidos
         if(contA != 1){
-            System.out.println("no pongas dos arrobas seguidos");
-            return false;
+            throw new EmailInvalidoException("no pongas dos arrobas seguidos");
         }
 
         //esta función sirve para que no dejes en blanco lo de antes del @
         if(pos_a==0 || pos_a==-1){
-            System.out.println("No se acepta ese formato de correo");
-            return false;
+            throw new EmailInvalidoException("No se acepta ese formato de correo");
         }
 
         if(email.charAt(pos_a+1)=='.')
-            return false;
+            throw new EmailInvalidoException("Formato no valido");
 //aquí nos aseguramos de que el punto no sea el primero
         String subEmail = email.substring(pos_a);
         if(subEmail.indexOf('.')==-1){
-            System.out.println("correo no valido");
-            return false;
+            throw new EmailInvalidoException("Formato no valido");
         }
 //aquí nos aseguramos de que contengan las extensiones
         posPunto = subEmail.indexOf('.');
         String extension = subEmail.substring(posPunto+1);
         if (!extension.equals("com") && !extension.equals("es") && !extension.equals("org")){
-            System.out.println("extension no valida");
-            return false;
+            throw new EmailInvalidoException("extension no valida");
         }
-        return true;
+
 
     }
     //comprueba que la frase está bien y lo encripta
@@ -522,19 +522,17 @@ public class Validaciones {
      * @return numero correcto
      */
 
-    public static boolean numerocorrecto(String telefono){
+    public static void numerocorrecto(String telefono) throws NumeroInvalidoException {
         telefono = telefono.trim();
         telefono = telefono.replaceAll("\\s", "");
         boolean fijo = true, movil = true;
         if(telefono.length()!=9){
-            System.out.println("numero no válido");
-            return false;
+            throw new NumeroInvalidoException("Numero no valido");
         }
 //aquí nos aseguramos que solo haya números
         for(int i = 0; i < telefono.length(); i++){
             if(telefono.charAt(i) < '0' || telefono.charAt(i) > '9') {
-                System.out.println("Solo acepta números");
-                return false;
+                throw new NumeroInvalidoException("Solo acepta números");
             }
         }
 //aquí nos aseguramos de que empiecen por 9,8,6,7 y dependiendo sera fijo o no
@@ -549,20 +547,8 @@ public class Validaciones {
             fijo = false;
             System.out.println("este numero no es correcto");
         }
-        return movil || fijo;
-    }
-
-    /**
-     * Esta función se encarga de verificar que todas las anteriores validaciones sean correctas
-     * @param nombre
-     * @param apellidos
-     * @param email
-     * @param telefono
-     * @param fecha
-     * @param control
-     * @return todos los datos correctamente
-     */
-    public static boolean comprobarentradas(String nombre, String apellidos, String email, String telefono, String fecha, String control) {
-        return nombrecorrecto(nombre,false) && nombrecorrecto(apellidos,true) && emailcorrecto(email) && numerocorrecto(telefono) && fechaCorrecta(fecha);
+        if (!movil && !fijo){
+            throw new NumeroInvalidoException("Formato no valido");
+        }
     }
 }

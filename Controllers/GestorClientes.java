@@ -7,6 +7,9 @@ package Practica_evaluacion.Controllers;
  * @since 11/01/2023
  */
 import Practica_evaluacion.Utils.Validaciones;
+import Practica_evaluacion.excepcion.EmailInvalidoException;
+import Practica_evaluacion.excepcion.NombreNoValidoException;
+import Practica_evaluacion.excepcion.StringVacioException;
 import Practica_evaluacion.models.Cliente;
 
 import java.io.*;
@@ -139,20 +142,51 @@ public class GestorClientes {
             dni=scanner.nextLine();
             dni=dni.toUpperCase();
         }while (!Validaciones.dni(dni));
+
+
         do {
             System.out.println("Nombre:");
             nombre=scanner.nextLine();
             nombre=nombre.toUpperCase();
-        }while (!Validaciones.nombrecorrecto(nombre,false));
+
+            try {
+                Validaciones.nombrecorrecto(nombre,false);
+            }catch (StringVacioException| NombreNoValidoException e){
+                System.out.printf(e.getMessage());
+                continue;
+            }
+            break;
+
+        }while (true);
+
         do {
             System.out.println("Apellidos:");
             apellidos= scanner.nextLine();
             apellidos=apellidos.toUpperCase();
-        }while (!Validaciones.nombrecorrecto(apellidos,true));
+
+            try {
+                Validaciones.nombrecorrecto(apellidos,true);
+            } catch (StringVacioException | NombreNoValidoException e) {
+                System.out.printf(e.getMessage());
+                continue;
+            }
+            break;
+        }while (true);
+
         do {
             System.out.println("Email:");
             email= scanner.nextLine();
-        }while (!Validaciones.emailcorrecto(email));
+
+            try {
+                Validaciones.emailcorrecto(email);
+            } catch (StringVacioException | EmailInvalidoException e){
+                System.out.printf(e.getMessage());
+                continue;
+            }
+            break;
+        }while (true);
+
+
         do {
             System.out.println("Teléfono:");
             telefono= scanner.nextLine();
@@ -168,15 +202,11 @@ public class GestorClientes {
             //aquí nos aseguramos de que si todos los parámetros son correctos imprima el código de seguridad
             control = Validaciones.primera_letra(control);
         }while (control.equals("ERROR"));
-
-        if ( Validaciones.comprobarentradas(nombre,apellidos,email,telefono,fechanacimiento,control)){
             System.out.print("tu código es:");
             System.out.println(control);
             Cliente cliente=new Cliente(nombre,apellidos,email,telefono,dni);
 
-        }else{
-            System.out.println("has fallado la autentificación  vuelve a empezar");
-        }
+
 
     }
     
