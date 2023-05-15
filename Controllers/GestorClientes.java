@@ -7,10 +7,7 @@ package Practica_evaluacion.Controllers;
  * @since 11/01/2023
  */
 import Practica_evaluacion.Utils.Validaciones;
-import Practica_evaluacion.excepcion.EmailInvalidoException;
-import Practica_evaluacion.excepcion.NombreNoValidoException;
-import Practica_evaluacion.excepcion.NumeroInvalidoException;
-import Practica_evaluacion.excepcion.StringVacioException;
+import Practica_evaluacion.excepcion.*;
 import Practica_evaluacion.models.Cliente;
 
 import java.io.*;
@@ -122,8 +119,6 @@ public class GestorClientes {
 
         //variables
         String dni;
-        String email_usuario;
-        String codigo_usuario;
         String email = "";
         String control = "";
         String nombre="";
@@ -142,7 +137,15 @@ public class GestorClientes {
             System.out.println("DNI:");
             dni=scanner.nextLine();
             dni=dni.toUpperCase();
-        }while (!Validaciones.dni(dni));
+
+            try{
+               Validaciones.dni(dni);
+            }catch (Formato_dni_Exception e){
+                System.out.printf(e.getMessage());
+                continue;
+            }
+            break;
+        }while (true);
 
 
         do {
@@ -203,8 +206,8 @@ public class GestorClientes {
             System.out.println("Fecha de nacimiento (dd/mm/aaaa) o (dd-mm-aaaa):");
             fechanacimiento= scanner.nextLine();
             try {
-                Validaciones.numerocorrecto(telefono);
-            }catch (NumeroInvalidoException e){
+                Validaciones.fechaCorrecta(fechanacimiento);
+            }catch (FormatoFechaNoValidoException e){
                 System.out.printf(e.getMessage());
                 continue;
             }
@@ -213,22 +216,52 @@ public class GestorClientes {
         }while (true);
         do {
             System.out.println("Frase de control (4 palabras separadas por 1 espacio cada palabra):");
-            control= scanner.nextLine();
-            control=control.toUpperCase();
+            control = scanner.nextLine();
+            control = control.toUpperCase();
             try {
                 Validaciones.primera_letra(control);
-            }catch (StringVacioException e){
+            } catch (StringVacioException e) {
 
                 System.out.printf(e.getMessage());
+                continue;
 
             }
             System.out.print("tu código es:");
             System.out.println(control);
-            Cliente cliente=new Cliente(nombre,apellidos,email,telefono,dni);
-
-
-
+            Cliente cliente = new Cliente(nombre, apellidos, email, telefono, dni);
+            listado_de_clientes.add(cliente);
+            break;
+        }while(true);
     }
-    
 
+    public void login_cliente(){
+        Scanner scanner=new Scanner(System.in);
+        String email_usuario;
+        String codigo_usuario;
+        char caso = ' ';
+        String opcion="";
+
+        System.out.println("Dime tu email de usuario:");
+        email_usuario = scanner.nextLine();
+        System.out.println("Dime tu código:");
+        codigo_usuario= scanner.nextLine();
+        //aquí nos encargaremos de que el código y el email sean iguales a los que están registrados
+        //y que el usuario, email o ambas estén vacíos
+        if (!Validaciones.noTieneNada(email_usuario)||!Validaciones.noTieneNada(codigo_usuario)){
+            do {
+                System.out.printf("*****Bienvenido al hotel*******\n");
+                System.out.printf("\n1. Reserva de habitación");
+                System.out.printf("\n2. Atención al cliente");
+                System.out.printf("\n3. Pago online con factura");
+                System.out.printf("\n4. Salir\n");
+                System.out.println("\n Opción en numero: ");
+                opcion = scanner.nextLine();
+                if (opcion.length()==1){
+                    caso=opcion.charAt(0);
+                } else{
+                    System.out.println("opción invalida");
+                }
+            }while (!opcion.equals("1")&&!opcion.equals("2")&&!opcion.equals("3")&&!opcion.equals("4"));
+        }
+    }
 }

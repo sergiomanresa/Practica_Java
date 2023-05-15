@@ -20,51 +20,28 @@ public class Validaciones {
      * @return dni valido
      */
 
-    public static boolean dni(String dni){
+    public static void dni(String dni) throws Formato_dni_Exception{
         //la longitud de un DNI siempre es de 9 caracteres
         if(dni.length()!=9){
-            System.out.println("longitud inválida");
-            return false;
+            throw new Formato_dni_Exception("La longitud del DNI no es correcta");
         }
         //Comprueba que los 8 primeros digitos son numeros
         for(int i=0; i<dni.length()-1;i++){
-            if(dni.charAt(i)<'0' ||dni.charAt(i)>'9'){
-                System.out.println("No se aceptan caracteres que no sean numeros");
-                return false;
+            if(dni.charAt(i)<'0'&& dni.charAt(i)>'9'){
+                throw new Formato_dni_Exception("Solo se aceptan números ");
             }
         }
         //Se comprueba la letra del final
-        if(dni.charAt(dni.length()-1)<'A'|| dni.charAt(dni.length()-1)>'Z'){
-            System.out.println("Falta la letra final");
-            return false;
+        if(dni.charAt(dni.length()-1)<'A' && dni.charAt(dni.length()-1)>'Z'){
+            throw new Formato_dni_Exception("Error en la letra");
         }
         else{
             int resultadoCalculo = Integer.parseInt(dni.substring(0, dni.length()-1))%23;
-            if(resultadoCalculo==0) return dni.charAt(dni.length()-1)=='T';
-            else if(resultadoCalculo==1) return dni.charAt(dni.length()-1)=='R';
-            else if(resultadoCalculo==2) return dni.charAt(dni.length()-1)=='W';
-            else if(resultadoCalculo==3) return dni.charAt(dni.length()-1)=='A';
-            else if(resultadoCalculo==4) return dni.charAt(dni.length()-1)=='G';
-            else if(resultadoCalculo==5) return dni.charAt(dni.length()-1)=='M';
-            else if(resultadoCalculo==6) return dni.charAt(dni.length()-1)=='Y';
-            else if(resultadoCalculo==7) return dni.charAt(dni.length()-1)=='F';
-            else if(resultadoCalculo==8) return dni.charAt(dni.length()-1)=='P';
-            else if(resultadoCalculo==9) return dni.charAt(dni.length()-1)=='D';
-            else if(resultadoCalculo==10) return dni.charAt(dni.length()-1)=='X';
-            else if(resultadoCalculo==11) return dni.charAt(dni.length()-1)=='B';
-            else if(resultadoCalculo==12) return dni.charAt(dni.length()-1)=='N';
-            else if(resultadoCalculo==13) return dni.charAt(dni.length()-1)=='J';
-            else if(resultadoCalculo==14) return dni.charAt(dni.length()-1)=='Z';
-            else if(resultadoCalculo==15) return dni.charAt(dni.length()-1)=='S';
-            else if(resultadoCalculo==16) return dni.charAt(dni.length()-1)=='Q';
-            else if(resultadoCalculo==17) return dni.charAt(dni.length()-1)=='V';
-            else if(resultadoCalculo==18) return dni.charAt(dni.length()-1)=='H';
-            else if(resultadoCalculo==19) return dni.charAt(dni.length()-1)=='L';
-            else if(resultadoCalculo==20) return dni.charAt(dni.length()-1)=='C';
-            else if(resultadoCalculo==21) return dni.charAt(dni.length()-1)=='K';
-            else if(resultadoCalculo==23) return dni.charAt(dni.length()-1)=='E';
+            String letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+            if(!(dni.charAt(8)==letras.charAt(resultadoCalculo))){
+                throw new Formato_dni_Exception("Letra incorrecta en el DNI");
+            }
         }
-        return true;
     }
 
     private static int[]fecha= new int[6];

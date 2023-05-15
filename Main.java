@@ -25,6 +25,7 @@ public class Main {
 
 
         //variables
+
         int dinero_habitaciones=0;
         String opcion_habitaciones2="";
         String opcion_habitaciones="";
@@ -63,35 +64,10 @@ public class Main {
             switch (caso){
                 case '1' :
                     GestorClientes gestorClientes=new GestorClientes();
-
-
-
-
+                    gestorClientes.registro_clientes();
                     break;
                 case '2':
-                    System.out.println("Dime tu email de usuario:");
-                    email_usuario = scanner.nextLine();
-                    System.out.println("Dime tu código:");
-                    codigo_usuario= scanner.nextLine();
-                    //aquí nos encargaremos de que el código y el email sean iguales a los que están registrados
-                    //y que el usuario, email o ambas estén vacíos
-                    if (!Validaciones.noTieneNada(email_usuario)||!Validaciones.noTieneNada(codigo_usuario)){
-                        if(!Validaciones.igual(email,control,email_usuario,codigo_usuario)){
-                            do {
-                                System.out.printf("*****Bienvenido al hotel*******\n");
-                                System.out.printf("\n1. Reserva de habitación");
-                                System.out.printf("\n2. Atención al cliente");
-                                System.out.printf("\n3. Pago online con factura");
-                                System.out.printf("\n4. Salir\n");
-
-                                System.out.println("\n Opción en numero: ");
-                                opcion = scanner.nextLine();
-                                if (opcion.length()==1){
-                                    caso=opcion.charAt(0);
-                                } else{
-                                    System.out.println("opción invalida");
-                                }
-                            }while (!opcion.equals("1")&&!opcion.equals("2")&&!opcion.equals("3")&&!opcion.equals("4"));
+                    gestorClientes.login_cliente();
 
                             switch (caso){
                                 case '1':
