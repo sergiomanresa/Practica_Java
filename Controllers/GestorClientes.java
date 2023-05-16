@@ -12,7 +12,9 @@ import Practica_evaluacion.models.Cliente;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Scanner;
 
 public class GestorClientes {
@@ -241,6 +243,7 @@ public class GestorClientes {
         char caso = ' ';
         String opcion="";
 
+
         System.out.println("Dime tu email de usuario:");
         email_usuario = scanner.nextLine();
         System.out.println("Dime tu código:");
@@ -262,6 +265,110 @@ public class GestorClientes {
                     System.out.println("opción invalida");
                 }
             }while (!opcion.equals("1")&&!opcion.equals("2")&&!opcion.equals("3")&&!opcion.equals("4"));
+        }
+    }
+
+    public void Preguntas(){
+
+        Scanner scanner=new Scanner(System.in);
+        String control = "";
+        String opcion="";
+        String pregunta="";
+
+        System.out.println("***** PREGUNTAS FRECUENTES *****");
+        ArrayList<String> preguntas = new ArrayList<String>();
+        ArrayList<String>respuestas = new ArrayList<String>();
+        preguntas.add(" Salir");
+        preguntas.add(" Agregar preguntas");
+        preguntas.add(" ¿Cómo puedo llamar fuera del hotel con el teléfono de la habitación?");
+        preguntas.add(" ¿Es gratis la comida de la nevera de la habitation?");
+        respuestas.add("pulsando el * puedes llamar");
+        respuestas.add("No no es gratis");
+        for (int i=0; i<preguntas.size(); i++) {
+            System.out.println(i + ". "+preguntas.get(i));
+        }
+        do {
+            System.out.println("Opción en número: ");
+            opcion=scanner.nextLine();
+        }while (!opcion.equals("0") && !opcion.equals("1") && !opcion.equals("2")&& !opcion.equals("3"));
+
+        if (!Validaciones.solo_numero(opcion)|| Validaciones.noTieneNada(opcion)){
+            System.out.println("Solo números");
+        }
+        else{
+            if (opcion.equals("1")){
+                System.out.println("Dime la pregunta: ");
+                pregunta=scanner.nextLine();
+                if (!Validaciones.noTieneNada(pregunta)){
+                    preguntas.add(pregunta);
+                    System.out.println("El administrador a recibido la pregunta espere la posible respuesta");
+                }else{
+                    System.out.println("no dejes en blanco la pregunta");
+                }
+            }
+            else if(Integer.parseInt(opcion)!=0) {
+                System.out.println(respuestas.get(Integer.parseInt(opcion)-2));
+            }
+        }
+    }
+
+    public void pago(){
+        Scanner scanner=new Scanner(System.in);
+        String opcion="";
+        String tarjeta="";
+        int dinero_habitaciones=0;
+        int codigo_factura= (int) (Math.random()*10000+1);
+
+        System.out.println("******* Pago online ********");
+        System.out.println("opciones de pago : ");
+        System.out.println("1.Mediante tarjeta de crédito.");
+        System.out.println("2.Mediante Bizum. ");
+        System.out.println("0.Salir. ");
+        System.out.println("opción en numero:");
+        opcion= scanner.nextLine();
+        if (!Validaciones.solo_numero(opcion)){
+            System.out.println("solo números");
+        }
+        else{
+            if (opcion.equals("1")){
+                System.out.println("******* Pago mediante tarjeta de crédito ********");
+                do {
+                    System.out.println("Introduce el numero de la tarjeta:");
+                    tarjeta= scanner.nextLine();
+
+                    if (!Validaciones.solo_numero(tarjeta)||!Validaciones.validación_tarjeta(tarjeta)||Validaciones.noTieneNada(tarjeta)){
+
+                    }else {
+                        Validaciones.tipo_tarjeta(tarjeta);
+                    }
+                }while (!Validaciones.solo_numero(tarjeta) || !Validaciones.validación_tarjeta(tarjeta) || Validaciones.noTieneNada(tarjeta));
+                System.out.println("*******_Factura_********");
+                System.out.println("Datos del cliente: ");
+                System.out.println("nombre del cliente: "+nombre);
+                String fecha = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+                System.out.println("Fecha factura: "+fecha );
+                System.out.println("Código Factura: "+ codigo_factura);
+                System.out.println("Precio total: "+ dinero_habitaciones);
+
+            }
+            else if (opcion.equals("2")) {
+                System.out.println("******* Pago mediante Bizum ********");
+                System.out.println("Numero de teléfono:");
+                System.out.println("694463985");
+                System.out.println("*******_Factura_********");
+                System.out.println("Datos del cliente: ");
+                System.out.println("nombre del cliente: "+nombre);
+                String fecha = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+                System.out.println("Fecha factura: "+fecha );
+                System.out.println("Código Factura: "+ codigo_factura);
+                System.out.println("Precio total: "+dinero_habitaciones+" IVA incluido");
+            }
+            else if (opcion.equals("0")){
+                System.out.println("Saliendo...");
+            }
+            else{
+                System.out.println("numero fuera de rango ");
+            }
         }
     }
 }
