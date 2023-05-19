@@ -17,7 +17,7 @@ public class Validaciones {
      * - Longitud de 9 caracteres
      * - 8 primeros caracteres han de ser numeros y el ultimo una letra en mayuscula
      * @param dni
-     * @return dni valido
+     * @throws Formato_dni_Exception
      */
 
     public static void dni(String dni) throws Formato_dni_Exception{
@@ -168,7 +168,7 @@ public class Validaciones {
     /**
      * Esta funcion se encarga de comprobar si la fecha es correcta
      * @param date
-     * @return la fecha correcta
+     * @throws FormatoFechaNoValidoException
      */
 
     public static void fechaCorrecta(String date) throws FormatoFechaNoValidoException {
@@ -399,7 +399,7 @@ public class Validaciones {
      * Esta función se encarga de comprobar si el nombre y el apellido sean correctos
      * @param frase
      * @param apellido
-     * @return nombre correcto
+     * @throws StringVacioException,NombreNoValidoException
      */
     public static void nombrecorrecto(String frase, boolean apellido) throws StringVacioException, NombreNoValidoException {
 
@@ -431,9 +431,9 @@ public class Validaciones {
     }
 
     /**
-     * esta funcion verifica el correo
+     * Esta funcion verifica el correo
      * @param email
-     * @return email correcto
+     * @throws StringVacioException,EmailInvalidoException
      */
     public static void emailcorrecto(String email) throws StringVacioException, EmailInvalidoException {
         email = email.trim();
@@ -482,7 +482,7 @@ public class Validaciones {
     /**
      * se encarga de verificar el número de teléfono diferenciando entre teléfono fijo o no
      * @param telefono
-     * @return numero correcto
+     * @throws NumeroInvalidoException
      */
 
     public static void numerocorrecto(String telefono) throws NumeroInvalidoException {

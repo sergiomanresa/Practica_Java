@@ -1,6 +1,7 @@
 package Practica_evaluacion.test;
 
 import Practica_evaluacion.Utils.Validaciones;
+import Practica_evaluacion.excepcion.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,27 +25,31 @@ class ValidacionesTest {
 
     @org.junit.jupiter.api.Test
     void primera_letra() {
-        assertEquals(Validaciones.primera_letra("Pipo Pope Pipas Parque"),"PPPP78");
-        assertNotEquals(Validaciones.primera_letra("Pipo Pope PipasParque"),"PPPP78");
-        assertNotEquals(Validaciones.primera_letra("PipoPopePipasParque"),"PPPP78");
-        assertNotEquals(Validaciones.primera_letra("Pipo"),"PPPP78");
-        assertNotEquals(Validaciones.primera_letra("  e  "),"PPPP78");
-        assertNotEquals(Validaciones.primera_letra("@"),"PPPP78");
+        assertThrows(StringVacioException.class, () -> {
+            Validaciones.primera_letra("Pipo Pope Pipas Parque");
+            Validaciones.primera_letra("Pipo Pope PipasParque");
+            Validaciones.primera_letra("PipoPopePipasParque");
+            Validaciones.primera_letra("Pipo");
+            Validaciones.primera_letra("  e  ");
+            Validaciones.primera_letra("@");
+        });
+
     }
 
     @org.junit.jupiter.api.Test
     void fechaCorrecta() {
-        assertTrue(Validaciones.fechaCorrecta("19-12-1999"));
-        assertTrue(Validaciones.fechaCorrecta("19/12/1999"));
-        assertFalse(Validaciones.fechaCorrecta("00-00-00"));
-        assertFalse(Validaciones.fechaCorrecta("00/00/00"));
-        assertFalse(Validaciones.fechaCorrecta("04-10-2015"));
-        assertFalse(Validaciones.fechaCorrecta("04/10/2015"));
-        assertFalse(Validaciones.fechaCorrecta("04-10-2033"));
-        assertFalse(Validaciones.fechaCorrecta("04/10/2033"));
-        assertFalse(Validaciones.fechaCorrecta("-04-10-2015"));
-        assertFalse(Validaciones.fechaCorrecta("-04/10/2015"));
-
+        assertThrows(FormatoFechaNoValidoException.class,()->{
+           Validaciones.fechaCorrecta("19-12-1999");
+            Validaciones.fechaCorrecta("19/12/1999");
+            Validaciones.fechaCorrecta("00-00-00");
+            Validaciones.fechaCorrecta("00/00/00");
+            Validaciones.fechaCorrecta("04-10-2015");
+            Validaciones.fechaCorrecta("04/10/2015");
+            Validaciones.fechaCorrecta("04-10-2033");
+            Validaciones.fechaCorrecta("04/10/2033");
+            Validaciones.fechaCorrecta("-04-10-2015");
+            Validaciones.fechaCorrecta("-04/10/2015");
+        });
     }
 
     @org.junit.jupiter.api.Test
@@ -57,34 +62,63 @@ class ValidacionesTest {
     }
 
     @org.junit.jupiter.api.Test
-    void nombrecorrecto() {
-        assertTrue(Validaciones.nombrecorrecto("sergio",false));
-        assertFalse(Validaciones.nombrecorrecto("6",false));
-        assertFalse(Validaciones.nombrecorrecto("a@a",false));
-        assertFalse(Validaciones.nombrecorrecto("@",true));
+    void nombrecorrecto_vacio() {
+        assertThrows(StringVacioException.class,()->{
+            Validaciones.nombrecorrecto("sergio",false);
+            Validaciones.nombrecorrecto("6",false);
+            Validaciones.nombrecorrecto("a@a",false);
+            Validaciones.nombrecorrecto("@",true);
 
+        });
+    }
+    @org.junit.jupiter.api.Test
+    void nombrecorrecto() {
+        assertThrows(NombreNoValidoException.class,()->{
+            Validaciones.nombrecorrecto("sergio",false);
+            Validaciones.nombrecorrecto("6",false);
+            Validaciones.nombrecorrecto("a@a",false);
+            Validaciones.nombrecorrecto("@",true);
+
+        });
     }
 
     @org.junit.jupiter.api.Test
+    void emailcorrecto_vacio() {
+        assertThrows(StringVacioException.class,()->{
+            Validaciones.emailcorrecto("a@a.es");
+            Validaciones.emailcorrecto("a@.es");
+            Validaciones.emailcorrecto("@a.es");
+            Validaciones.emailcorrecto("@.es");
+            Validaciones.emailcorrecto("a@a.mes");
+            Validaciones.emailcorrecto("a@e@a.es");
+            Validaciones.emailcorrecto("a @a.es");
+        });
+    }
+    @org.junit.jupiter.api.Test
     void emailcorrecto() {
-        assertTrue(Validaciones.emailcorrecto("a@a.es"));
-        assertFalse(Validaciones.emailcorrecto("a@.es"));
-        assertFalse(Validaciones.emailcorrecto("@a.es"));
-        assertFalse(Validaciones.emailcorrecto("@.es"));
-        assertFalse(Validaciones.emailcorrecto("a@a.mes"));
-        assertFalse(Validaciones.emailcorrecto("a@e@a.es"));
-        assertFalse(Validaciones.emailcorrecto("a @a.es"));
+        assertThrows(EmailInvalidoException.class,()->{
+            Validaciones.emailcorrecto("a@a.es");
+            Validaciones.emailcorrecto("a@.es");
+            Validaciones.emailcorrecto("@a.es");
+            Validaciones.emailcorrecto("@.es");
+            Validaciones.emailcorrecto("a@a.mes");
+            Validaciones.emailcorrecto("a@e@a.es");
+            Validaciones.emailcorrecto("a @a.es");
+        });
     }
 
     @org.junit.jupiter.api.Test
     void numerocorrecto() {
-        assertTrue(Validaciones.numerocorrecto("694493951"));
-        assertFalse(Validaciones.numerocorrecto("a"));
-        assertFalse(Validaciones.numerocorrecto("1"));
-        assertFalse(Validaciones.numerocorrecto("@"));
-        assertFalse(Validaciones.numerocorrecto(""));
-        assertFalse(Validaciones.numerocorrecto("123456789"));
-        assertFalse(Validaciones.numerocorrecto("123456 578"));
+        assertThrows(NumeroInvalidoException.class,()->{
+            Validaciones.numerocorrecto("694493951");
+            Validaciones.numerocorrecto("a");
+            Validaciones.numerocorrecto("1");
+            Validaciones.numerocorrecto("@");
+            Validaciones.numerocorrecto("");
+            Validaciones.numerocorrecto("123456789");
+            Validaciones.numerocorrecto("123456 578");
+        });
+
     }
 
 }

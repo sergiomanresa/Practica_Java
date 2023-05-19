@@ -69,15 +69,4 @@ public class Reservas {
     public void setFecha_salida(String fecha_salida) {
         this.fecha_salida = fecha_salida;
     }
-
-    /**
-     * se encarga de generar dos reservas
-     * @return lista de reservas
-     */
-    public Reservas[] generar_reserva(){
-        Reservas[] reservas=new Reservas[2];
-        reservas[0] = new Reservas((int) (Math.random()*(1000+1)),"93743217O",1,"11/02/2023","15/02/2023");
-        reservas[1] = new Reservas((int) (Math.random()*(1000+1)),"79574739G",2,"16/03/2023","19/03/2023");
-        return reservas;
-    }
 }
